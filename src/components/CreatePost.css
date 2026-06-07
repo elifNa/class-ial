@@ -1,0 +1,125 @@
+.create-post {
+  min-height: 100vh;
+  background: var(--surface);
+  padding: 40px 20px;
+}
+
+.create-post-content {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.back-button {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 16px;
+  padding: 0;
+  margin-bottom: 24px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.back-button:hover {
+  color: var(--primary);
+}
+
+.create-post-content h1 {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 8px 0;
+}
+
+.class-info {
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin: 0 0 32px 0;
+}
+
+.form-group {
+  margin-bottom: 24px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+}
+
+.disabled-input {
+  background-color: var(--surface);
+  cursor: not-allowed;
+}
+
+.success-message {
+  background: var(--success);
+  color: white;
+  padding: 16px;
+  border-radius: var(--radius);
+  text-align: center;
+  font-weight: 600;
+  margin-bottom: 24px;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.category-toggle {
+  display: flex;
+  gap: 8px;
+}
+
+.category-button {
+  flex: 1;
+  padding: 12px;
+  background: var(--background);
+  border: 2px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: var(--radius);
+  transition: all 0.2s ease;
+}
+
+.category-button:hover {
+  border-color: var(--primary);
+}
+
+.category-button.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 14px;
+  background: var(--primary);
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: var(--radius);
+  transition: background 0.2s ease;
+}
+
+.submit-button:hover {
+  background: var(--primary-dark);
+}

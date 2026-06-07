@@ -1,0 +1,78 @@
+.login-selection {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary);
+  padding: 20px;
+}
+
+.login-selection-content {
+  background: var(--background);
+  border-radius: var(--radius-lg);
+  padding: 48px;
+  box-shadow: var(--shadow-lg);
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+}
+
+.brand {
+  margin-bottom: 40px;
+}
+
+.brand h1 {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.login-options h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 24px;
+}
+
+.login-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  padding: 24px;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+  transition: all 0.2s ease;
+}
+
+.login-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.login-card-icon {
+  font-size: 48px;
+  flex-shrink: 0;
+}
+
+.login-card-content {
+  text-align: left;
+  flex: 1;
+}
+
+.login-card-content h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 8px 0;
+}
+
+.login-card-content p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0;
+}

@@ -5,13 +5,17 @@ import './StudentLogin.css';
 
 export default function StudentLogin() {
   const navigate = useNavigate();
-  const { loginStudent } = useAuth();
+  const { loginStudent, loading } = useAuth();
   const [studentNumber, setStudentNumber] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    loginStudent(studentNumber);
-    navigate('/student-dashboard');
+    try {
+      await loginStudent(studentNumber);
+      navigate('/student-dashboard');
+    } catch (err) {
+      alert('Login failed: ' + err.message);
+    }
   };
 
   return (
@@ -34,11 +38,12 @@ export default function StudentLogin() {
                 onChange={(e) => setStudentNumber(e.target.value)}
                 required
                 placeholder="Enter your student number"
+                disabled={loading}
               />
             </div>
             
-            <button type="submit" className="submit-button">
-              Login
+            <button type="submit" className="submit-button" disabled={loading}>
+              {loading ? 'Logging in...' : 'Login'}
             </button>
           </form>
         </div>

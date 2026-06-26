@@ -1,62 +1,83 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { supabase } from '../lib/supabaseClient';
 import './SubjectDetails.css';
 
 export default function SubjectDetails() {
   const navigate = useNavigate();
   const { subjectId } = useParams();
+  const { user } = useAuth();
   const [filter, setFilter] = useState('all');
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const subjectNames = {
-    math: 'Math',
-    physics: 'Physics',
-    chemistry: 'Chemistry',
-    biology: 'Biology',
-    english: 'English',
-    history: 'History'
-  };
+  const subjectName = subjectId.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
 
   const filters = [
     { id: 'all', label: 'All' },
-    { id: 'announcement', label: 'Announcements' },
-    { id: 'homework', label: 'Homework' },
-    { id: 'exam', label: 'Exams' }
+    { id: 'Announcement', label: 'Announcements' },
+    { id: 'Homework', label: 'Homework' },
+    { id: 'Exam', label: 'Exams' }
   ];
 
-  const posts = [
-    {
-      id: 1,
-      category: 'homework',
-      title: 'Chapter 5 Exercises',
-      content: 'Complete exercises 5.1 to 5.10 by Friday. Show all your work.',
-      timestamp: '2m ago',
-      author: 'by Alice Wilson'
-    },
-    {
-      id: 2,
-      category: 'announcement',
-      title: 'Extra Tutoring Session',
-      content: 'There will be an extra tutoring session this Thursday at 3 PM in Room 201.',
-      timestamp: '2h ago',
-      author: 'by James Show'
-    },
-    {
-      id: 3,
-      category: 'exam',
-      title: 'Midterm Exam Schedule',
-      content: 'Midterm exam will be held on Monday, March 15th. Chapters 1-4 will be covered.',
-      timestamp: '1d ago',
-      author: 'by Alice Wilson'
-    },
-    {
-      id: 4,
-      category: 'homework',
-      title: 'Lab Report Due',
-      content: 'Lab report for Experiment 3 is due next Wednesday. Include all data analysis.',
-      timestamp: '2d ago',
-      author: 'by James Show'
+  useEffect(() => {
+    if (user?.className && subjectId) {
+      fetchPosts();
     }
-  ];
+  }, [user, subjectId]);
+
+  const fetchPosts = async () => {
+    try {
+      setLoading(true);
+      
+      const { data, error } = await supabase
+        .from('posts')
+        .select('*')
+        .eq('class_name', user.className.trim().toUpperCase())
+        .ilike('subject', `%${subjectName}%`)
+        .order('created_at', { ascending: false });
+      
+      if (error) {
+        console.error('Error fetching posts:', error);
+        setPosts([]);
+        return;
+      }
+      
+      if (!data || data.length === 0) {
+        setPosts([]);
+        return;
+      }
+      
+      // Format posts with relative timestamps
+      const formattedPosts = data.map(post => ({
+        ...post,
+        timestamp: formatTimestamp(post.created_at)
+      }));
+      
+      setPosts(formattedPosts);
+    } catch (err) {
+      console.error('Error fetching posts:', err);
+      setPosts([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const formatTimestamp = (dateString) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMins < 1) return 'Just now';
+    if (diffMins < 60) return `${diffMins}m ago`;
+    if (diffHours < 24) return `${diffHours}h ago`;
+    if (diffDays < 7) return `${diffDays}d ago`;
+    return date.toLocaleDateString();
+  };
 
   const filteredPosts = filter === 'all' 
     ? posts 
@@ -68,9 +89,9 @@ export default function SubjectDetails() {
 
   const getCategoryColor = (category) => {
     const colors = {
-      homework: 'var(--warning)',
-      announcement: 'var(--primary)',
-      exam: 'var(--danger)'
+      Homework: 'var(--warning)',
+      Announcement: 'var(--primary)',
+      Exam: 'var(--danger)'
     };
     return colors[category] || 'var(--secondary)';
   };
@@ -84,8 +105,8 @@ export default function SubjectDetails() {
           </button>
           
           <div className="subject-header">
-            <h1>{subjectNames[subjectId] || subjectId}</h1>
-            <p className="grade-info">Grade 10 - 10A</p>
+            <h1>{subjectName}</h1>
+            <p className="grade-info">Class {user?.className}</p>
           </div>
           
           <div className="filter-toggle">
@@ -100,24 +121,30 @@ export default function SubjectDetails() {
             ))}
           </div>
           
-          <div className="posts-list">
-            {filteredPosts.map((post) => (
-              <div key={post.id} className="post-card">
-                <div className="post-header">
-                  <span 
-                    className="post-category"
-                    style={{ backgroundColor: getCategoryColor(post.category) }}
-                  >
-                    {getCategoryLabel(post.category)}
-                  </span>
-                  <span className="post-timestamp">{post.timestamp}</span>
+          {loading ? (
+            <p>Loading posts...</p>
+          ) : filteredPosts.length === 0 ? (
+            <p>No posts available for this subject.</p>
+          ) : (
+            <div className="posts-list">
+              {filteredPosts.map((post) => (
+                <div key={post.id} className="post-card">
+                  <div className="post-header">
+                    <span 
+                      className="post-category"
+                      style={{ backgroundColor: getCategoryColor(post.category) }}
+                    >
+                      {getCategoryLabel(post.category)}
+                    </span>
+                    <span className="post-timestamp">{post.timestamp}</span>
+                  </div>
+                  <h3 className="post-title">{post.title}</h3>
+                  <p className="post-content">{post.content}</p>
+                  <p className="post-author">by {post.teacher_name}</p>
                 </div>
-                <h3 className="post-title">{post.title}</h3>
-                <p className="post-content">{post.content}</p>
-                <p className="post-author">{post.author}</p>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

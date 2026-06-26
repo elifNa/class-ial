@@ -1,46 +1,82 @@
+import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { supabase } from '../lib/supabaseClient';
 import './ClassPosts.css';
 
 export default function ClassPosts() {
   const navigate = useNavigate();
   const { classId } = useParams();
   const { user } = useAuth();
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Mock posts data - will be replaced with Supabase data
-  const posts = [
-    {
-      id: 1,
-      category: 'homework',
-      title: 'Chapter 5 Exercises',
-      content: 'Complete exercises 5.1 to 5.10 by Friday. Show all your work.',
-      timestamp: '2m ago'
-    },
-    {
-      id: 2,
-      category: 'announcement',
-      title: 'Extra Tutoring Session',
-      content: 'There will be an extra tutoring session this Thursday at 3 PM in Room 201.',
-      timestamp: '2h ago'
-    },
-    {
-      id: 3,
-      category: 'exam',
-      title: 'Midterm Exam Schedule',
-      content: 'Midterm exam will be held on Monday, March 15th. Chapters 1-4 will be covered.',
-      timestamp: '1d ago'
+  useEffect(() => {
+    if (classId) {
+      fetchPosts();
     }
-  ];
+  }, [classId]);
+
+  const fetchPosts = async () => {
+    try {
+      setLoading(true);
+      
+      const { data, error } = await supabase
+        .from('posts')
+        .select('*')
+        .eq('class_name', classId.trim().toUpperCase())
+        .order('created_at', { ascending: false });
+      
+      if (error) {
+        console.error('Error fetching posts:', error);
+        setPosts([]);
+        return;
+      }
+      
+      if (!data || data.length === 0) {
+        setPosts([]);
+        return;
+      }
+      
+      // Format posts with relative timestamps
+      const formattedPosts = data.map(post => ({
+        ...post,
+        timestamp: formatTimestamp(post.created_at)
+      }));
+      
+      setPosts(formattedPosts);
+    } catch (err) {
+      console.error('Error fetching posts:', err);
+      setPosts([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const formatTimestamp = (dateString) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMins < 1) return 'Just now';
+    if (diffMins < 60) return `${diffMins}m ago`;
+    if (diffHours < 24) return `${diffHours}h ago`;
+    if (diffDays < 7) return `${diffDays}d ago`;
+    return date.toLocaleDateString();
+  };
 
   const getCategoryLabel = (category) => {
-    return category.charAt(0).toUpperCase() + category.slice(1);
+    return category;
   };
 
   const getCategoryColor = (category) => {
     const colors = {
-      homework: 'var(--warning)',
-      announcement: 'var(--primary)',
-      exam: 'var(--danger)'
+      Homework: 'var(--warning)',
+      Announcement: 'var(--primary)',
+      Exam: 'var(--danger)'
     };
     return colors[category] || 'var(--secondary)';
   };
@@ -55,7 +91,6 @@ export default function ClassPosts() {
           
           <div className="class-header">
             <h1>Class {classId} Posts</h1>
-            <p className="subject-info">{user?.subject || 'Subject'}</p>
           </div>
           
           <button 
@@ -65,29 +100,33 @@ export default function ClassPosts() {
             + Create New Post
           </button>
           
-          <div className="posts-list">
-            {posts.length === 0 ? (
-              <div className="no-posts">
-                <p>No posts yet for this class.</p>
-              </div>
-            ) : (
-              posts.map((post) => (
-                <div key={post.id} className="post-card">
-                  <div className="post-header">
-                    <span 
-                      className="post-category"
-                      style={{ backgroundColor: getCategoryColor(post.category) }}
-                    >
-                      {getCategoryLabel(post.category)}
-                    </span>
-                    <span className="post-timestamp">{post.timestamp}</span>
-                  </div>
-                  <h3 className="post-title">{post.title}</h3>
-                  <p className="post-content">{post.content}</p>
+          {loading ? (
+            <p>Loading posts...</p>
+          ) : (
+            <div className="posts-list">
+              {posts.length === 0 ? (
+                <div className="no-posts">
+                  <p>No posts yet for this class.</p>
                 </div>
-              ))
-            )}
-          </div>
+              ) : (
+                posts.map((post) => (
+                  <div key={post.id} className="post-card">
+                    <div className="post-header">
+                      <span 
+                        className="post-category"
+                        style={{ backgroundColor: getCategoryColor(post.category) }}
+                      >
+                        {getCategoryLabel(post.category)}
+                      </span>
+                      <span className="post-timestamp">{post.timestamp}</span>
+                    </div>
+                    <h3 className="post-title">{post.title}</h3>
+                    <p className="post-content">{post.content}</p>
+                  </div>
+                ))
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>

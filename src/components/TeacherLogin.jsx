@@ -5,17 +5,20 @@ import './TeacherLogin.css';
 
 export default function TeacherLogin() {
   const navigate = useNavigate();
-  const { loginTeacher } = useAuth();
+  const { loginTeacher, loading, error } = useAuth();
   const [formData, setFormData] = useState({
-    name: '',
-    surname: '',
+    email: '',
     password: ''
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    loginTeacher(formData.name, formData.surname);
-    navigate('/teacher-dashboard');
+    try {
+      await loginTeacher(formData.email, formData.password);
+      navigate('/teacher-dashboard');
+    } catch (err) {
+      alert('Login failed: ' + err.message);
+    }
   };
 
   return (
@@ -30,26 +33,15 @@ export default function TeacherLogin() {
           
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label htmlFor="name">Name</label>
+              <label htmlFor="email">Email</label>
               <input
-                id="name"
-                type="text"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                id="email"
+                type="email"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 required
-                placeholder="Enter your name"
-              />
-            </div>
-            
-            <div className="form-group">
-              <label htmlFor="surname">Surname</label>
-              <input
-                id="surname"
-                type="text"
-                value={formData.surname}
-                onChange={(e) => setFormData({ ...formData, surname: e.target.value })}
-                required
-                placeholder="Enter your surname"
+                placeholder="Enter your email"
+                disabled={loading}
               />
             </div>
             
@@ -62,11 +54,12 @@ export default function TeacherLogin() {
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 required
                 placeholder="Enter your password"
+                disabled={loading}
               />
             </div>
             
-            <button type="submit" className="submit-button">
-              Login
+            <button type="submit" className="submit-button" disabled={loading}>
+              {loading ? 'Logging in...' : 'Login'}
             </button>
           </form>
         </div>

@@ -1,32 +1,54 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { supabase } from '../lib/supabaseClient';
 import './CreatePost.css';
 
 export default function CreatePost() {
   const navigate = useNavigate();
   const { classId } = useParams();
   const { user } = useAuth();
-  const [category, setCategory] = useState('announcement');
+  const [category, setCategory] = useState('Announcement');
   const [showSuccess, setShowSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
+    subject: '',
     title: '',
     content: ''
   });
 
   const categories = [
-    { id: 'announcement', label: 'Announcement' },
-    { id: 'homework', label: 'Homework' },
-    { id: 'exam', label: 'Exam' }
+    { id: 'Announcement', label: 'Announcement' },
+    { id: 'Homework', label: 'Homework' },
+    { id: 'Exam', label: 'Exam' }
   ];
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: Implement post creation with Supabase
-    setShowSuccess(true);
-    setTimeout(() => {
-      navigate('/teacher-dashboard');
-    }, 2000);
+    setLoading(true);
+    try {
+      const { error } = await supabase
+        .from('posts')
+        .insert({
+          category,
+          subject: formData.subject.trim(),
+          title: formData.title.trim(),
+          content: formData.content.trim(),
+          class_name: classId.trim().toUpperCase(),
+          teacher_id: user?.id
+        });
+      
+      if (error) throw error;
+      
+      setShowSuccess(true);
+      setTimeout(() => {
+        navigate('/teacher-dashboard');
+      }, 2000);
+    } catch (err) {
+      alert('Failed to create post: ' + err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -56,6 +78,7 @@ export default function CreatePost() {
                     type="button"
                     className={`category-button ${category === cat.id ? 'active' : ''}`}
                     onClick={() => setCategory(cat.id)}
+                    disabled={loading}
                   >
                     {cat.label}
                   </button>
@@ -64,12 +87,15 @@ export default function CreatePost() {
             </div>
             
             <div className="form-group">
-              <label>Subject</label>
+              <label htmlFor="subject">Subject</label>
               <input
+                id="subject"
                 type="text"
-                value={user?.subject || ''}
-                disabled
-                className="disabled-input"
+                value={formData.subject}
+                onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                required
+                placeholder="Enter subject (e.g., Math, Physics)"
+                disabled={loading}
               />
             </div>
             
@@ -82,6 +108,7 @@ export default function CreatePost() {
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                 required
                 placeholder="Enter post title"
+                disabled={loading}
               />
             </div>
             
@@ -94,11 +121,12 @@ export default function CreatePost() {
                 required
                 placeholder="Enter post content"
                 rows={6}
+                disabled={loading}
               />
             </div>
             
-            <button type="submit" className="submit-button">
-              Create Post
+            <button type="submit" className="submit-button" disabled={loading}>
+              {loading ? 'Creating...' : 'Create Post'}
             </button>
           </form>
         </div>

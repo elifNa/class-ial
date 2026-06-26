@@ -9,7 +9,7 @@ export default function LoginSelection() {
       <div className="container">
         <div className="login-selection-content">
           <div className="brand">
-            <h1>ClassİAL</h1>
+            <h1>İzmir Atatürk Lisesi ClassİAL</h1>
           </div>
           
           <div className="login-options">

@@ -22,29 +22,30 @@
 }
 
 .brand h1 {
-  font-size: 36px;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin: 0;
-}
-
-.login-options h2 {
   font-size: 24px;
   font-weight: 600;
   color: var(--text-primary);
-  margin-bottom: 24px;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.login-options h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 20px;
 }
 
 .login-card {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 16px;
   width: 100%;
-  padding: 24px;
+  padding: 20px;
   background: var(--surface);
-  border: 2px solid var(--border);
+  border: 1px solid var(--border);
   border-radius: var(--radius);
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   transition: all 0.2s ease;
 }
 
@@ -55,7 +56,7 @@
 }
 
 .login-card-icon {
-  font-size: 48px;
+  font-size: 40px;
   flex-shrink: 0;
 }
 
@@ -65,14 +66,14 @@
 }
 
 .login-card-content h3 {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 600;
   color: var(--text-primary);
-  margin: 0 0 8px 0;
+  margin: 0 0 4px 0;
 }
 
 .login-card-content p {
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-secondary);
   margin: 0;
 }

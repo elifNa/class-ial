@@ -10,9 +10,9 @@
 .login-form {
   background: var(--background);
   border-radius: var(--radius-lg);
-  padding: 48px;
+  padding: 40px;
   box-shadow: var(--shadow-lg);
-  max-width: 450px;
+  max-width: 400px;
   width: 100%;
 }
 
@@ -32,22 +32,22 @@
 }
 
 .login-form h1 {
-  font-size: 32px;
-  font-weight: 700;
+  font-size: 28px;
+  font-weight: 600;
   color: var(--text-primary);
-  margin: 0 0 32px 0;
+  margin: 0 0 28px 0;
 }
 
 .form-group {
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .form-group label {
   display: block;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--text-primary);
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .form-group input {
@@ -56,13 +56,14 @@
 
 .submit-button {
   width: 100%;
-  padding: 14px;
+  padding: 12px;
   background: var(--primary);
   color: white;
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 500;
   border-radius: var(--radius);
   transition: background 0.2s ease;
+  margin-top: 8px;
 }
 
 .submit-button:hover {

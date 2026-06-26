@@ -1,11 +1,11 @@
 .create-post {
   min-height: 100vh;
   background: var(--surface);
-  padding: 40px 20px;
+  padding: 32px 20px;
 }
 
 .create-post-content {
-  max-width: 600px;
+  max-width: 500px;
   margin: 0 auto;
 }
 
@@ -13,9 +13,9 @@
   background: none;
   border: none;
   color: var(--text-secondary);
-  font-size: 16px;
+  font-size: 14px;
   padding: 0;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   cursor: pointer;
   transition: color 0.2s ease;
 }
@@ -25,28 +25,28 @@
 }
 
 .create-post-content h1 {
-  font-size: 32px;
-  font-weight: 700;
+  font-size: 28px;
+  font-weight: 600;
   color: var(--text-primary);
-  margin: 0 0 8px 0;
+  margin: 0 0 4px 0;
 }
 
 .class-info {
-  font-size: 16px;
+  font-size: 14px;
   color: var(--text-secondary);
-  margin: 0 0 32px 0;
+  margin: 0 0 24px 0;
 }
 
 .form-group {
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .form-group label {
   display: block;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--text-primary);
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .form-group input,
@@ -63,11 +63,11 @@
 .success-message {
   background: var(--success);
   color: white;
-  padding: 16px;
+  padding: 12px;
   border-radius: var(--radius);
   text-align: center;
-  font-weight: 600;
-  margin-bottom: 24px;
+  font-weight: 500;
+  margin-bottom: 20px;
   animation: slideIn 0.3s ease;
 }
 
@@ -89,12 +89,12 @@
 
 .category-button {
   flex: 1;
-  padding: 12px;
+  padding: 10px;
   background: var(--background);
-  border: 2px solid var(--border);
+  border: 1px solid var(--border);
   color: var(--text-secondary);
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   border-radius: var(--radius);
   transition: all 0.2s ease;
 }
@@ -111,13 +111,14 @@
 
 .submit-button {
   width: 100%;
-  padding: 14px;
+  padding: 12px;
   background: var(--primary);
   color: white;
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 500;
   border-radius: var(--radius);
   transition: background 0.2s ease;
+  margin-top: 8px;
 }
 
 .submit-button:hover {

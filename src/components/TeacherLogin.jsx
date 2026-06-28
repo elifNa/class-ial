@@ -17,7 +17,7 @@ export default function TeacherLogin() {
       await loginTeacher(formData.email, formData.password);
       navigate('/teacher-dashboard');
     } catch (err) {
-      alert('Login failed: ' + err.message);
+      alert('Giriş başarısız: ' + err.message);
     }
   };
 
@@ -26,40 +26,40 @@ export default function TeacherLogin() {
       <div className="container">
         <div className="login-form">
           <button className="back-button" onClick={() => navigate('/')}>
-            ← Back
+            ← Geri
           </button>
           
-          <h1>Teacher Login</h1>
+          <h1>Öğretmen Girişi</h1>
           
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label htmlFor="email">Email</label>
+              <label htmlFor="email">E-posta</label>
               <input
                 id="email"
                 type="email"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 required
-                placeholder="Enter your email"
+                placeholder="E-posta adresinizi girin"
                 disabled={loading}
               />
             </div>
             
             <div className="form-group">
-              <label htmlFor="password">Password</label>
+              <label htmlFor="password">Şifre</label>
               <input
                 id="password"
                 type="password"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 required
-                placeholder="Enter your password"
+                placeholder="Şifrenizi girin"
                 disabled={loading}
               />
             </div>
             
             <button type="submit" className="submit-button" disabled={loading}>
-              {loading ? 'Logging in...' : 'Login'}
+              {loading ? 'Giriş yapılıyor...' : 'Giriş Yap'}
             </button>
           </form>
         </div>

@@ -13,7 +13,7 @@ export default function LoginSelection() {
           </div>
           
           <div className="login-options">
-            <h2>Login as</h2>
+            <h2>Giriş Yap</h2>
             
             <button 
               className="login-card"
@@ -21,8 +21,8 @@ export default function LoginSelection() {
             >
               <div className="login-card-icon">👨‍🏫</div>
               <div className="login-card-content">
-                <h3>Teacher</h3>
-                <p>Access your classes and create posts for students</p>
+                <h3>Öğretmen</h3>
+                <p>Sınıflarınıza erişin ve öğrenciler için gönderiler oluşturun</p>
               </div>
             </button>
             
@@ -32,8 +32,8 @@ export default function LoginSelection() {
             >
               <div className="login-card-icon">👨‍🎓</div>
               <div className="login-card-content">
-                <h3>Student</h3>
-                <p>View your subjects and stay updated with class posts</p>
+                <h3>Öğrenci</h3>
+                <p>Derslerinizi görüntüleyin ve sınıf gönderileriyle güncel kalın</p>
               </div>
             </button>
           </div>

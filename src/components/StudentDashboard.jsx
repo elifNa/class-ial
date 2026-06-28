@@ -11,14 +11,14 @@ export default function StudentDashboard() {
   const [loading, setLoading] = useState(true);
 
   const allSubjects = [
-    { id: 'math', name: 'Math' },
-    { id: 'chemistry', name: 'Chemistry' },
-    { id: 'biology', name: 'Biology' },
-    { id: 'physics', name: 'Physics' }
+    { id: 'math', name: 'Matematik', dbName: 'Math' },
+    { id: 'chemistry', name: 'Kimya', dbName: 'Chemistry' },
+    { id: 'biology', name: 'Biyoloji', dbName: 'Biology' },
+    { id: 'physics', name: 'Fizik', dbName: 'Physics' }
   ];
 
   useEffect(() => {
-    if (user?.class) {
+    if (user?.className) {
       fetchSubjects();
     }
   }, [user]);
@@ -46,10 +46,10 @@ export default function StudentDashboard() {
         return acc;
       }, {});
       
-      // Map all predefined subjects with their post counts
+      // Map all predefined subjects with their post counts (using dbName for database lookup)
       const subjectsArray = allSubjects.map(subj => ({
         ...subj,
-        posts: subjectCounts[subj.name] || 0
+        posts: subjectCounts[subj.dbName] || 0
       }));
       
       setSubjects(subjectsArray);
@@ -75,20 +75,20 @@ export default function StudentDashboard() {
       <div className="container">
         <div className="dashboard-header">
           <div>
-            <h1>Welcome, {user?.fullName}</h1>
-            <p className="subtitle">Student Dashboard - Class {user?.className}</p>
+            <h1>{user?.fullName}</h1>
+            <p className="subtitle">Öğrenci Paneli - Sınıf {user?.className}</p>
           </div>
           <button className="logout-button" onClick={handleLogout}>
-            Logout
+            Çıkış Yap
           </button>
         </div>
 
         <div className="subjects-section">
-          <h2>My Subjects</h2>
+          <h2>Derslerim</h2>
           {loading ? (
-            <p>Loading subjects...</p>
+            <p>Dersler yükleniyor...</p>
           ) : subjects.length === 0 ? (
-            <p>No posts available yet.</p>
+            <p>Henüz gönderi yok.</p>
           ) : (
             <div className="subjects-grid">
               {subjects.map((subject) => (
@@ -99,7 +99,7 @@ export default function StudentDashboard() {
                 >
                   <div className="subject-card-content">
                     <h3>{subject.name}</h3>
-                    <p>{subject.posts} posts</p>
+                    <p>{subject.posts} gönderi</p>
                   </div>
                 </button>
               ))}

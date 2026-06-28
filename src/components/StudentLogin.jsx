@@ -14,7 +14,7 @@ export default function StudentLogin() {
       await loginStudent(studentNumber);
       navigate('/student-dashboard');
     } catch (err) {
-      alert('Login failed: ' + err.message);
+      alert('Giriş başarısız: ' + err.message);
     }
   };
 
@@ -23,27 +23,27 @@ export default function StudentLogin() {
       <div className="container">
         <div className="login-form">
           <button className="back-button" onClick={() => navigate('/')}>
-            ← Back
+            ← Geri
           </button>
           
-          <h1>Student Login</h1>
+          <h1>Öğrenci Girişi</h1>
           
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label htmlFor="studentNumber">Student Number</label>
+              <label htmlFor="studentNumber">Öğrenci Numarası</label>
               <input
                 id="studentNumber"
                 type="text"
                 value={studentNumber}
                 onChange={(e) => setStudentNumber(e.target.value)}
                 required
-                placeholder="Enter your student number"
+                placeholder="Öğrenci numaranızı girin"
                 disabled={loading}
               />
             </div>
             
             <button type="submit" className="submit-button" disabled={loading}>
-              {loading ? 'Logging in...' : 'Login'}
+              {loading ? 'Giriş yapılıyor...' : 'Giriş Yap'}
             </button>
           </form>
         </div>

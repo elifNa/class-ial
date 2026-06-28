@@ -10,6 +10,7 @@ export default function CreatePost() {
   const { user } = useAuth();
   const [category, setCategory] = useState('Announcement');
   const [loading, setLoading] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
   const [formData, setFormData] = useState({
     subject: 'Math',
     title: '',
@@ -17,16 +18,16 @@ export default function CreatePost() {
   });
 
   const categories = [
-    { id: 'Announcement', label: 'Announcement' },
-    { id: 'Homework', label: 'Homework' },
-    { id: 'Exam', label: 'Exam' }
+    { id: 'Announcement', label: 'Duyuru' },
+    { id: 'Homework', label: 'Ödev' },
+    { id: 'Exam', label: 'Sınav' }
   ];
 
   const subjects = [
-    { id: 'Math', label: 'Math' },
-    { id: 'Chemistry', label: 'Chemistry' },
-    { id: 'Biology', label: 'Biology' },
-    { id: 'Physics', label: 'Physics' }
+    { id: 'Math', label: 'Matematik' },
+    { id: 'Chemistry', label: 'Kimya' },
+    { id: 'Biology', label: 'Biyoloji' },
+    { id: 'Physics', label: 'Fizik' }
   ];
 
   const handleCreatePost = async (e) => {
@@ -65,9 +66,11 @@ export default function CreatePost() {
       
       if (error) throw error;
       
-      // Show success alert and navigate back
-      alert('Success', 'Post created successfully!');
-      navigate(-1); // Navigate back to previous screen
+      // Show success message
+      setShowSuccess(true);
+      setTimeout(() => {
+        navigate('/teacher-dashboard');
+      }, 2000);
     } catch (err) {
       alert('Error', `Failed to create post: ${err.message}`);
     } finally {
@@ -80,14 +83,21 @@ export default function CreatePost() {
       <div className="container">
         <div className="create-post-content">
           <button className="back-button" onClick={() => navigate('/teacher-dashboard')}>
-            ← Back
+            ← Geri
           </button>
           
-          <h1>Create Post</h1>
-          <p className="class-info">Class: {classId}</p>
+          <h1>Gönderi Oluştur</h1>
+          <p className="class-info">Sınıf: {classId}</p>
+          
+          {showSuccess && (
+            <div className="success-message">
+              ✓ Gönderi başarıyla oluşturuldu!
+            </div>
+          )}
+          
           <form onSubmit={handleCreatePost}>
             <div className="form-group">
-              <label>Category</label>
+              <label>Kategori</label>
               <div className="category-toggle">
                 {categories.map((cat) => (
                   <button
@@ -104,7 +114,7 @@ export default function CreatePost() {
             </div>
             
             <div className="form-group">
-              <label>Subject</label>
+              <label>Ders</label>
               <div className="category-toggle">
                 {subjects.map((subj) => (
                   <button
@@ -121,33 +131,33 @@ export default function CreatePost() {
             </div>
             
             <div className="form-group">
-              <label htmlFor="title">Title</label>
+              <label htmlFor="title">Başlık</label>
               <input
                 id="title"
                 type="text"
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                 required
-                placeholder="Enter post title"
+                placeholder="Gönderi başlığı girin"
                 disabled={loading}
               />
             </div>
             
             <div className="form-group">
-              <label htmlFor="content">Content</label>
+              <label htmlFor="content">İçerik</label>
               <textarea
                 id="content"
                 value={formData.content}
                 onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                 required
-                placeholder="Enter post content"
+                placeholder="Gönderi içeriği girin"
                 rows={6}
                 disabled={loading}
               />
             </div>
             
             <button type="submit" className="submit-button" disabled={loading}>
-              {loading ? 'Creating...' : 'Create Post'}
+              {loading ? 'Oluşturuluyor...' : 'Gönderi Oluştur'}
             </button>
           </form>
         </div>

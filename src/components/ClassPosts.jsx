@@ -61,15 +61,20 @@ export default function ClassPosts() {
     const diffHours = Math.floor(diffMs / 3600000);
     const diffDays = Math.floor(diffMs / 86400000);
 
-    if (diffMins < 1) return 'Just now';
-    if (diffMins < 60) return `${diffMins}m ago`;
-    if (diffHours < 24) return `${diffHours}h ago`;
-    if (diffDays < 7) return `${diffDays}d ago`;
+    if (diffMins < 1) return 'Az önce';
+    if (diffMins < 60) return `${diffMins} dk önce`;
+    if (diffHours < 24) return `${diffHours} sa önce`;
+    if (diffDays < 7) return `${diffDays} gün önce`;
     return date.toLocaleDateString();
   };
 
   const getCategoryLabel = (category) => {
-    return category;
+    const labels = {
+      'Announcement': 'Duyuru',
+      'Homework': 'Ödev',
+      'Exam': 'Sınav'
+    };
+    return labels[category] || category;
   };
 
   const getCategoryColor = (category) => {
@@ -86,27 +91,27 @@ export default function ClassPosts() {
       <div className="container">
         <div className="class-posts-content">
           <button className="back-button" onClick={() => navigate('/teacher-dashboard')}>
-            ← Back
+            ← Geri
           </button>
           
           <div className="class-header">
-            <h1>Class {classId} Posts</h1>
+            <h1>Sınıf {classId} Gönderileri</h1>
           </div>
           
           <button 
             className="create-post-button"
             onClick={() => navigate(`/create-post/${classId}`)}
           >
-            + Create New Post
+            + Yeni Gönderi Oluştur
           </button>
           
           {loading ? (
-            <p>Loading posts...</p>
+            <p>Gönderiler yükleniyor...</p>
           ) : (
             <div className="posts-list">
               {posts.length === 0 ? (
                 <div className="no-posts">
-                  <p>No posts yet for this class.</p>
+                  <p>Bu sınıf için henüz gönderi yok.</p>
                 </div>
               ) : (
                 posts.map((post) => (

@@ -76,18 +76,18 @@ export default function TeacherDashboard() {
       <div className="container">
         <div className="dashboard-header">
           <div>
-            <h1>Welcome, {user?.firstName} {user?.lastName}</h1>
-            <p className="subtitle">Teacher Dashboard</p>
+            <h1>{user?.firstName} {user?.lastName}</h1>
+            <p className="subtitle">Öğretmen Paneli</p>
           </div>
           <button className="logout-button" onClick={handleLogout}>
-            Logout
+            Çıkış Yap
           </button>
         </div>
 
         <div className="classes-section">
-          <h2>Your Classes</h2>
+          <h2>Sınıflarınız</h2>
           {loading ? (
-            <p>Loading classes...</p>
+            <p>Sınıflar yükleniyor...</p>
           ) : (
             <div className="classes-grid">
               {classes.map((cls) => (
@@ -98,7 +98,7 @@ export default function TeacherDashboard() {
                 >
                   <div className="class-card-content">
                     <h3>{cls.name}</h3>
-                    <p>{cls.posts} posts</p>
+                    <p>{cls.posts} gönderi</p>
                   </div>
                 </button>
               ))}

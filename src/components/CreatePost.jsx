@@ -9,10 +9,9 @@ export default function CreatePost() {
   const { classId } = useParams();
   const { user } = useAuth();
   const [category, setCategory] = useState('Announcement');
-  const [showSuccess, setShowSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    subject: '',
+    subject: 'Math',
     title: '',
     content: ''
   });
@@ -23,29 +22,54 @@ export default function CreatePost() {
     { id: 'Exam', label: 'Exam' }
   ];
 
-  const handleSubmit = async (e) => {
+  const subjects = [
+    { id: 'Math', label: 'Math' },
+    { id: 'Chemistry', label: 'Chemistry' },
+    { id: 'Biology', label: 'Biology' },
+    { id: 'Physics', label: 'Physics' }
+  ];
+
+  const handleCreatePost = async (e) => {
     e.preventDefault();
     setLoading(true);
+
+    // Validate category
+    const validCategories = ['Announcement', 'Homework', 'Exam'];
+    if (!validCategories.includes(category)) {
+      alert('Error: Category must be exactly "Announcement", "Homework", or "Exam"');
+      setLoading(false);
+      return;
+    }
+
     try {
+      // Fetch current logged-in teacher's ID
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      
+      if (userError) throw userError;
+      if (!user) throw new Error('No authenticated user found');
+
+      // Clean class name target
+      const cleanedClassName = classId.trim().toUpperCase();
+
+      // Insert new post
       const { error } = await supabase
         .from('posts')
         .insert({
-          category,
-          subject: formData.subject.trim(),
           title: formData.title.trim(),
           content: formData.content.trim(),
-          class_name: classId.trim().toUpperCase(),
-          teacher_id: user?.id
+          category: category,
+          subject: formData.subject.trim(),
+          class_name: cleanedClassName,
+          teacher_id: user.id
         });
       
       if (error) throw error;
       
-      setShowSuccess(true);
-      setTimeout(() => {
-        navigate('/teacher-dashboard');
-      }, 2000);
+      // Show success alert and navigate back
+      alert('Success', 'Post created successfully!');
+      navigate(-1); // Navigate back to previous screen
     } catch (err) {
-      alert('Failed to create post: ' + err.message);
+      alert('Error', `Failed to create post: ${err.message}`);
     } finally {
       setLoading(false);
     }
@@ -61,14 +85,7 @@ export default function CreatePost() {
           
           <h1>Create Post</h1>
           <p className="class-info">Class: {classId}</p>
-          
-          {showSuccess && (
-            <div className="success-message">
-              ✓ Post created successfully!
-            </div>
-          )}
-          
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleCreatePost}>
             <div className="form-group">
               <label>Category</label>
               <div className="category-toggle">
@@ -87,16 +104,20 @@ export default function CreatePost() {
             </div>
             
             <div className="form-group">
-              <label htmlFor="subject">Subject</label>
-              <input
-                id="subject"
-                type="text"
-                value={formData.subject}
-                onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                required
-                placeholder="Enter subject (e.g., Math, Physics)"
-                disabled={loading}
-              />
+              <label>Subject</label>
+              <div className="category-toggle">
+                {subjects.map((subj) => (
+                  <button
+                    key={subj.id}
+                    type="button"
+                    className={`category-button ${formData.subject === subj.id ? 'active' : ''}`}
+                    onClick={() => setFormData({ ...formData, subject: subj.id })}
+                    disabled={loading}
+                  >
+                    {subj.label}
+                  </button>
+                ))}
+              </div>
             </div>
             
             <div className="form-group">

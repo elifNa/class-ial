@@ -10,6 +10,13 @@ export default function StudentDashboard() {
   const [subjects, setSubjects] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const allSubjects = [
+    { id: 'math', name: 'Math' },
+    { id: 'chemistry', name: 'Chemistry' },
+    { id: 'biology', name: 'Biology' },
+    { id: 'physics', name: 'Physics' }
+  ];
+
   useEffect(() => {
     if (user?.class) {
       fetchSubjects();
@@ -28,33 +35,27 @@ export default function StudentDashboard() {
       
       if (postsError) {
         console.error('Error fetching subjects:', postsError);
-        setSubjects([]);
+        setSubjects(allSubjects.map(subj => ({ ...subj, posts: 0 })));
         return;
       }
       
-      if (!posts || posts.length === 0) {
-        setSubjects([]);
-        return;
-      }
-      
-      // Group posts by subject and count them
+      // Count posts for each predefined subject
       const subjectCounts = posts.reduce((acc, post) => {
         const subject = post.subject || 'General';
         acc[subject] = (acc[subject] || 0) + 1;
         return acc;
       }, {});
       
-      // Convert to array format
-      const subjectsArray = Object.entries(subjectCounts).map(([name, count]) => ({
-        id: name.toLowerCase().replace(/\s+/g, '-'),
-        name,
-        posts: count
+      // Map all predefined subjects with their post counts
+      const subjectsArray = allSubjects.map(subj => ({
+        ...subj,
+        posts: subjectCounts[subj.name] || 0
       }));
       
       setSubjects(subjectsArray);
     } catch (err) {
       console.error('Error fetching subjects:', err);
-      setSubjects([]);
+      setSubjects(allSubjects.map(subj => ({ ...subj, posts: 0 })));
     } finally {
       setLoading(false);
     }
